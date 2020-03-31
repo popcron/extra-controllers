@@ -1,0 +1,10 @@
+{
+    "name": "com.popcron.inputdevices.gamecube",
+    "displayName": "GameCube Controller",
+    "version": "1.0.0",
+    "unity": "2018.3",
+    "description": "Adds support for GameCube controllers to the Input system.",
+	"dependencies": {
+		"com.unity.inputsystem": "1.0.0-preview.5"
+	}
+}
