@@ -3,6 +3,7 @@ Wanna add support for GameCube controllers to your unity game? Here you go then.
 
 # Requirements
 - Git
+- Unity's Input System package
 
 # Installation
 First, ensure that you have the drivers installed for GC controllers (explained [here](https://wiki.dolphin-emu.org/index.php?title=How_to_use_the_Official_GameCube_Controller_Adapter_for_Wii_U_in_Dolphin#Windows)).
