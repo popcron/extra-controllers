@@ -10,7 +10,7 @@ This is a package that adds support for the following controllers via Unity's In
 # Installation
 Then add the following line to your `manifest.json` file or use the + in Unity's package manager with the following URL:
 ```json
-"com.popcron.input-system-controllers": "https://github.com/popcron/input-system-controllers.git"
+"com.popcron.extra-controllers": "https://github.com/popcron/extra-controllers.git"
 ```
 
 # GameCube Controllers
