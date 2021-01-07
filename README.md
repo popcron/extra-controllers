@@ -1,5 +1,5 @@
-# Input System Controller
-This is a package that adds support for the following controllers:
+# Extra Controllers
+This is a package that adds support for the following controllers via Unity's Input System:
 - GameCube (through zadig on Windows)
 - HORIPAD for Nintendo Switch (Windows)
 
