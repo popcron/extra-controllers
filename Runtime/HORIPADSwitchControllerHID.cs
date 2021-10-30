@@ -6,7 +6,7 @@ using UnityEngine.InputSystem.Utilities;
 namespace UnityEngine.InputSystem
 {
     [StructLayout(LayoutKind.Explicit, Size = 20)]
-    public class HORIPADSwitchControllerHID : IInputStateTypeInfo
+    public struct HORIPADSwitchControllerHID : IInputStateTypeInfo
     {
         public FourCC format => new FourCC('H', 'I', 'D');
 

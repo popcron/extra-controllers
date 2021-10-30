@@ -3,9 +3,6 @@
 namespace UnityEngine.InputSystem
 {
     [InputControlLayout(stateType = typeof(HORIPADSwitchControllerHID))]
-#if UNITY_EDITOR
-    [UnityEditor.InitializeOnLoad]
-#endif
     public class PowerACorePlusController : Gamepad
     {
         /// <summary>
@@ -28,20 +25,13 @@ namespace UnityEngine.InputSystem
             }
         }
 
-        static PowerACorePlusController()
+        public static void SelfRegister()
         {
             InputDeviceMatcher matcher = new InputDeviceMatcher().
                 WithInterface("HID").
                 WithCapability("vendorId", 0x20d6).
                 WithCapability("productId", 0xa711);
             InputSystem.RegisterLayout<PowerACorePlusController>("PowerA Core (Plus) Controller", matches: matcher);
-        }
-
-        //gonna call the constractor like this
-        [RuntimeInitializeOnLoadMethod]
-        public static void Init()
-        {
-
         }
     }
 }

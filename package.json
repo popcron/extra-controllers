@@ -1,8 +1,14 @@
 {
     "name": "com.popcron.extra-controllers",
     "displayName": "Popcron Extra Controllers",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "unity": "2018.3",
+    "author":
+    {
+        "email": "philldamaskin@gmail.com",
+        "name": "popcron",
+        "url": "https://github.com/popcron"
+    },
     "description": "Adds support for GameCube controllers to the Unity Input System, along with other extra controllers.",
 	"dependencies": {
 		"com.unity.inputsystem": "1.0.0"

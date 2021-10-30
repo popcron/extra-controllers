@@ -6,9 +6,6 @@ using UnityEngine.InputSystem.LowLevel;
 namespace UnityEngine.InputSystem
 {
     [InputControlLayout(stateType = typeof(GameCubeHIDInputReport))]
-#if UNITY_EDITOR
-    [UnityEditor.InitializeOnLoad]
-#endif
     public class GameCubeController : Gamepad
     {
         /// <summary>
@@ -133,17 +130,10 @@ namespace UnityEngine.InputSystem
             }
         }
 
-        static GameCubeController()
+        public static void SelfRegister()
         {
             InputDeviceMatcher matcher = new InputDeviceMatcher().WithInterface("HID").WithCapability("vendorId", 0x79);
             InputSystem.RegisterLayout<GameCubeController>(matches: matcher);
-        }
-
-        //gonna call the constractor like this
-        [RuntimeInitializeOnLoadMethod]
-        public static void Init()
-        {
-        
         }
     }
 }

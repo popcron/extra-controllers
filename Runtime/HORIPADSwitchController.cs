@@ -3,9 +3,6 @@ using UnityEngine.InputSystem.Layouts;
 namespace UnityEngine.InputSystem
 {
     [InputControlLayout(stateType = typeof(HORIPADSwitchControllerHID))]
-#if UNITY_EDITOR
-    [UnityEditor.InitializeOnLoad]
-#endif
     public class HORIPADSwitchController : Gamepad
     {
         /// <summary>
@@ -28,20 +25,13 @@ namespace UnityEngine.InputSystem
             }
         }
 
-        static HORIPADSwitchController()
+        public static void SelfRegister()
         {
             InputDeviceMatcher matcher = new InputDeviceMatcher().
                 WithInterface("HID").
                 WithCapability("vendorId", 0x0f0d).
                 WithCapability("productId", 0xc1);
             InputSystem.RegisterLayout<HORIPADSwitchController>("HORIPAD Switch Controller", matches: matcher);
-        }
-
-        //gonna call the constractor like this
-        [RuntimeInitializeOnLoadMethod]
-        public static void Init()
-        {
-
         }
     }
 }
