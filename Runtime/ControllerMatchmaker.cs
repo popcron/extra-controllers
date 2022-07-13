@@ -3,23 +3,23 @@
 #if UNITY_EDITOR
     [UnityEditor.InitializeOnLoad]
 #endif
-    public class ControllerMatchmaker : Gamepad
+    public static class ControllerMatchmaker
     {
-        static ControllerMatchmaker()
-        {
-            Initialize();
-        }
-
 #if UNITY_EDITOR
         [UnityEditor.Callbacks.DidReloadScripts]
         private static void ReloadedScripts()
         {
-            Initialize();
+            Trigger();
         }
 #endif
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void Initialize()
+        private static void StartedPlaying()
+        {
+            Trigger();
+        }
+
+        private static void Trigger()
         {
             GameCubeController.SelfRegister();
             HORIPADSwitchController.SelfRegister();

@@ -1,119 +1,132 @@
 ﻿using System;
+using System.ComponentModel;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.Haptics;
 using UnityEngine.InputSystem.Layouts;
 using UnityEngine.InputSystem.LowLevel;
 
 namespace UnityEngine.InputSystem
 {
-    [InputControlLayout(stateType = typeof(GameCubeHIDInputReport))]
-    public class GameCubeController : Gamepad
+    [InputControlLayout(stateType = typeof(GameCubeControllerState), isGenericTypeOfDevice = true)]
+    public class GameCubeController : InputDevice, IDualMotorRumble
     {
         /// <summary>
-        /// Also refered to as the generic joystick.
+        /// The right button in the middle section of the gamepad (called "menu" on Xbox
+        /// controllers and "options" on PS4 controllers).
         /// </summary>
-        public new StickControl leftStick => this["joystick"] as StickControl;
+        /// <value>Control representing the right button in midsection.</value>
+        public ButtonControl startButton { get; protected set; }
 
         /// <summary>
-        /// Also called the C-Stick.
+        /// The 4-way directional pad on the gamepad.
         /// </summary>
-        public new StickControl rightStick => this["cStick"] as StickControl;
+        /// <value>Control representing the d-pad.</value>
+        public DpadControl dpad { get; protected set; }
+
+        /// <summary>
+        /// The left thumbstick on the controller.
+        /// </summary>
+        public Vector2Control leftStick { get; protected set; }
+
+        /// <summary>
+        /// The control stick using on the right of the controller.
+        /// </summary>
+        public Vector2Control controlStick { get; protected set; }
 
         /// <summary>
         /// The left trigger.
-        /// </summary>
-        public new AxisControl leftTrigger => this["leftTrigger"] as AxisControl;
+        /// </remarks>
+        public AxisControl leftTrigger { get; protected set; }
 
         /// <summary>
         /// The right trigger.
-        /// </summary>
-        public new AxisControl rightTrigger => this["rightTrigger"] as AxisControl;
+        public AxisControl rightTrigger { get; protected set; }
 
         /// <summary>
-        /// This is the button that is pressed when the left trigger is fully down.
-        /// </summary>
-        public new ButtonControl leftShoulder => this["leftButton"] as ButtonControl;
+        /// The left trigger button when depressed all the way.
+        /// </remarks>
+        public ButtonControl leftTriggerButton { get; protected set; }
 
         /// <summary>
-        /// This is the button that is pressed when the right trigger is fully down.
-        /// </summary>
-        public new ButtonControl rightShoulder => this["rightButton"] as ButtonControl;
+        /// The right trigger button when depressed all the way.
+        public ButtonControl rightTriggerButton { get; protected set; }
+
+        public ButtonControl zButton { get; protected set; }
+
+        public ButtonControl aButton { get; protected set; }
+
+        public ButtonControl bButton { get; protected set; }
+
+        public ButtonControl xButton { get; protected set; }
+
+        public ButtonControl yButton { get; protected set; }
+
+        public bool isPluggedIn 
+        {
+            get
+            {
+                float l = leftTrigger.ReadUnprocessedValue();
+                float r = rightTrigger.ReadUnprocessedValue();
+                return false;
+            }
+        }
+        
+        private DualMotorRumble rumble;
 
         /// <summary>
-        /// The pathetic D-Pad.
+        /// Retrieve a gamepad button by its <see cref="GamepadButton"/> enumeration
+        /// constant.
         /// </summary>
-        public new DpadControl dpad => this["dpad"] as DpadControl;
-
-        /// <summary>
-        /// The big green button.
-        /// </summary>
-        public new ButtonControl aButton => this["aButton"] as ButtonControl;
-
-        /// <summary>
-        /// The tiny red button under the A button.
-        /// </summary>
-        public new ButtonControl bButton => this["bButton"] as ButtonControl;
-
-        /// <summary>
-        /// The button that is to the right of the A button.
-        /// </summary>
-        public new ButtonControl xButton => this["xButton"] as ButtonControl;
-
-        /// <summary>
-        /// The button that is above the A button.
-        /// </summary>
-        public new ButtonControl yButton => this["yButton"] as ButtonControl;
-
-        /// <summary>
-        /// The button in the middle of the controller.
-        /// </summary>
-        public new ButtonControl startButton => this["startButton"] as ButtonControl;
-
-        /// <summary>
-        /// The button in the middle of the controller.
-        /// </summary>
-        public new ButtonControl selectButton => this["startButton"] as ButtonControl;
-
-        /// <summary>
-        /// The special Z button.
-        /// </summary>
-        public ButtonControl zButton => this["zButton"] as ButtonControl;
-
-        #region Shims
-        [Obsolete("The circle button is not a control on the GameCube controller.")]
-        public new ButtonControl circleButton { get; }
-
-        [Obsolete("The square button is not a control on the GameCube controller.")]
-        public new ButtonControl squareButton { get; }
-
-        [Obsolete("The triangle button is not a control on the GameCube controller.")]
-        public new ButtonControl triangleButton { get; }
-
-        [Obsolete("The cross button is not a control on the GameCube controller.")]
-        public new ButtonControl crossButton { get; }
-
-        [Obsolete("Right stick button doesn't exist on a GameCube controller.")]
-        public new ButtonControl rightStickButton { get; }
-
-        [Obsolete("Left stick button doesn't exist on a GameCube controller.")]
-        public new ButtonControl leftStickButton { get; }
-
-        [Obsolete("Button east cannot be inferred on a GameCube controller.")]
-        public new ButtonControl buttonEast { get; }
-
-        [Obsolete("Button south cannot be inferred on a GameCube controller.")]
-        public new ButtonControl buttonSouth { get; }
-
-        [Obsolete("Button north cannot be inferred on a GameCube controller.")]
-        public new ButtonControl buttonNorth { get; }
-
-        [Obsolete("Button west cannot be inferred on a GameCube controller.")]
-        public new ButtonControl buttonWest { get; }
-        #endregion
+        /// <param name="control">Button to retrieve.</param>
+        /// <exception cref="ArgumentException"><paramref name="control"/> is not a valid gamepad
+        /// button value.</exception>
+        public ButtonControl this[Control control]
+        {
+            get
+            {
+                switch (control)
+                {
+                    case Control.Start: return startButton;
+                    case Control.Y: return yButton;
+                    case Control.X: return xButton;
+                    case Control.B: return bButton;
+                    case Control.A: return aButton;
+                    case Control.LButton: return leftTriggerButton;
+                    case Control.RButton: return rightTriggerButton;
+                    case Control.ZButton: return zButton;
+                    case Control.DpadUp: return dpad.down;
+                    case Control.DpadDown: return dpad.down;
+                    case Control.DpadLeft: return dpad.left;
+                    case Control.DpadRight: return dpad.right;
+                    default:
+                        throw new InvalidEnumArgumentException(nameof(control), (int)control, typeof(Control));
+                }
+            }
+        }
 
         /// <summary>
         /// The last used/added GameCube controller.
         /// </summary>
-        public new static GameCubeController current { get; private set; }
+        public static GameCubeController current { get; private set; }
+
+        protected override void FinishSetup()
+        {
+            startButton = GetChildControl<ButtonControl>("startButton");
+            yButton = GetChildControl<ButtonControl>("yButton");
+            xButton = GetChildControl<ButtonControl>("xButton");
+            bButton = GetChildControl<ButtonControl>("bButton");
+            aButton = GetChildControl<ButtonControl>("aButton");
+            leftTriggerButton = GetChildControl<ButtonControl>("leftTriggerButton");
+            rightTriggerButton = GetChildControl<ButtonControl>("rightTriggerButton");
+            zButton = GetChildControl<ButtonControl>("zButton");
+            dpad = GetChildControl<DpadControl>("dpad");
+            leftStick = GetChildControl<StickControl>("leftStick");
+            controlStick = GetChildControl<StickControl>("controlStick");
+            leftTrigger = GetChildControl<AxisControl>("leftTrigger");
+            rightTrigger = GetChildControl<AxisControl>("rightTrigger");
+
+            base.FinishSetup();
+        }
 
         public override void MakeCurrent()
         {
@@ -134,6 +147,47 @@ namespace UnityEngine.InputSystem
         {
             InputDeviceMatcher matcher = new InputDeviceMatcher().WithInterface("HID").WithCapability("vendorId", 0x79);
             InputSystem.RegisterLayout<GameCubeController>(matches: matcher);
+        }
+
+        public void SetMotorSpeeds(float lowFrequency, float highFrequency)
+        {
+            rumble.SetMotorSpeeds(this, lowFrequency, highFrequency);
+        }
+
+        public void PauseHaptics()
+        {
+            rumble.PauseHaptics(this);
+        }
+
+        public void ResumeHaptics()
+        {
+            rumble.ResumeHaptics(this);
+        }
+
+        public void ResetHaptics()
+        {
+            rumble.ResetHaptics(this);
+        }
+
+        public enum Control
+        {
+            Start,
+            Y,
+            X,
+            B,
+            A,
+            Button1,
+            LButton,
+            RButton,
+            ZButton,
+            DpadUp,
+            DpadDown,
+            DpadRight,
+            DpadLeft,
+            LeftJoystick,
+            ControlStick,
+            LTrigger,
+            RTrigger
         }
     }
 }
