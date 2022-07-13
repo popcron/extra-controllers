@@ -145,8 +145,11 @@ namespace UnityEngine.InputSystem
 
         public static void SelfRegister()
         {
-            InputDeviceMatcher matcher = new InputDeviceMatcher().WithInterface("HID").WithCapability("vendorId", 0x79);
-            InputSystem.RegisterLayout<GameCubeController>(matches: matcher);
+            var mayflashAdapter = new InputDeviceMatcher().WithInterface("HID").WithCapability("vendorId", 0x0079);
+            InputSystem.RegisterLayout<GameCubeController>(matches: mayflashAdapter);
+
+            var weeWuGCAdapter = new InputDeviceMatcher().WithInterface("HID").WithCapability("vendorId", 0x057E).WithProduct("0x0337");
+            InputSystem.RegisterLayout<GameCubeController>(matches: weeWuGCAdapter);
         }
 
         public void SetMotorSpeeds(float lowFrequency, float highFrequency)
